@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Insta Downloader</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 20px; background: #f4f4f9; }
+        .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #833ab4; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #result { margin-top: 20px; text-align: center; }
+        .ad-space { background: #eee; height: 100px; margin-top: 20px; display: flex; align-items: center; justify-content: center; border: 1px dashed #ccc; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Free Insta Downloader</h2>
+    <p>Paste Link to Test:</p>
+    <input type="text" id="urlInput" placeholder="https://www.instagram.com/reel/...">
+    <button onclick="grabLink()">Simulate Grab Link</button>
+
+    <div id="result"></div>
+
+    <!-- Ad Placement Zone -->
+    <div class="ad-space">
+        Google AdSense Responsive Unit
+    </div>
+</div>
+
+<script>
+    async function grabLink() {
+        const url = document.getElementById('urlInput').value;
+        const resultDiv = document.getElementById('result');
+        
+        // IMPORTANT: Replace this with your actual Render backend URL
+        const BACKEND_URL = 'https://YOUR-RENDER-LIVE-APP-URL.onrender.com';
+
+        resultDiv.innerText = "Extracting...";
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/download`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                resultDiv.innerHTML = `<p>Extracted!</p>
+                                      <a href="${data.video_url}" target="_blank">
+                                        <button style="background:green;">Download MP4</button>
+                                      </a>`;
+            } else {
+                resultDiv.innerText = "Error: Could not extract link.";
+            }
+        } catch (error) {
+            resultDiv.innerText = "Server unreachable. Ensure Render is deployed.";
+        }
+    }
+</script>
+
+</body>
+</html>
